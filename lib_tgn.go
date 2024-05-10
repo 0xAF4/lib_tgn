@@ -10,6 +10,7 @@ import (
 
 type TelegramNotifier struct {
 	token  string
+	prefix string
 	admins []string
 }
 
@@ -17,20 +18,21 @@ const (
 	TelegramSendURL = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s&parse_mode=HTML"
 )
 
-func New(token string, adms []string) (*TelegramNotifier, error) {
+func New(token string, pref string, adms []string) (*TelegramNotifier, error) {
 	if len(adms) == 0 {
 		return nil, errors.New("Укажите админов бота")
 	}
 
 	return &TelegramNotifier{
 		token:  token,
+		prefix: pref,
 		admins: adms,
 	}, nil
 }
 
 func (b *TelegramNotifier) Notify(message string) error {
 	for _, admin := range b.admins {
-		url := fmt.Sprintf(TelegramSendURL, b.token, admin, message)
+		url := fmt.Sprintf(TelegramSendURL, b.token, admin, b.prefix+"\n"+message)
 		resp, err := http.Get(url)
 		if err != nil {
 			return err
