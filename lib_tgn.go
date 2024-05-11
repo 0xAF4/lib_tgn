@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"regexp"
 )
 
@@ -70,7 +71,7 @@ func (b *TelegramNotifier) Notify(message string) error {
 		if hasLetters(admin) {
 			continue
 		}
-		if _, err := SendHttpGet(fmt.Sprintf(sendMessageURL, b.token, admin, b.prefix+"\n"+message)); err != nil {
+		if _, err := SendHttpGet(fmt.Sprintf(sendMessageURL, b.token, admin, url.QueryEscape(b.prefix+"\n"+message))); err != nil {
 			return err
 		}
 	}
