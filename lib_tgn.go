@@ -38,7 +38,7 @@ func New(token string, pref string, adms *[]string) (*TelegramNotifier, error) {
 	}
 
 	chats := &[]Chat{}
-	re := regexp.MustCompile(`"chat":(.*?),`)
+	re := regexp.MustCompile(`"chat":{(.*?)},`)
 	matches := re.FindAllStringSubmatch(string(body), -1)
 	for _, match := range matches {
 		fmt.Println(match[1])
