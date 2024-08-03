@@ -11,7 +11,7 @@ import (
 
 func hasLetters(str string) bool {
 	for _, char := range str {
-		if unicode.IsLetter(char) {
+		if unicode.IsLetter(char) && string(char) != "-" {
 			return true
 		}
 	}
@@ -20,7 +20,7 @@ func hasLetters(str string) bool {
 
 func FindChatIDbyUsername(arr *[]Chat, username string) string {
 	for _, chat := range *arr {
-		if chat.Username == username /*&& chat.Type != "channel"*/ {
+		if chat.Username == username && chat.Type != "channel" {
 			return strconv.Itoa(chat.ID)
 		}
 	}

@@ -27,11 +27,11 @@ const (
 	regGetChats    = `"chat":(.*?),`
 )
 
-func New(token string, pref string, adms *[]string) (*TelegramNotifier, error) {
-	if len(*adms) == 0 {
-		return nil, errors.New("Укажите админов бота")
-	}
+// Возвращает чаты в виде JSON объектов
+// chats, _ := l_tgn.GetChats(conf.Telegram.Token)
+// fmt.Println(chats)
 
+func GetChats(token string) ([]Chat, error) {
 	body, err := SendHttpGet(fmt.Sprintf(getUpdates, token))
 	if err != nil {
 		return nil, err
@@ -49,19 +49,26 @@ func New(token string, pref string, adms *[]string) (*TelegramNotifier, error) {
 		}
 	}
 
-	for i, admin := range *adms {
-		if !hasLetters(admin) {
+	return *chats, nil
+}
+
+func New(token string, pref string, adms *[]string) (*TelegramNotifier, error) {
+	if len(*adms) == 0 {
+		return nil, errors.New("Укажите админов бота")
+	}
+
+	var iadms []string
+	for _, admin := range *adms {
+		if hasLetters(admin) {
 			continue
 		}
-		if id := FindChatIDbyUsername(chats, admin); id != "" {
-			(*adms)[i] = id
-		}
+		iadms = append(iadms, admin)
 	}
 
 	return &TelegramNotifier{
 		token:  token,
 		prefix: pref,
-		admins: adms,
+		admins: &iadms,
 	}, nil
 }
 
