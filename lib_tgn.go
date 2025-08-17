@@ -27,6 +27,13 @@ const (
 	regGetChats    = `"chat":(.*?),`
 )
 
+const (
+	LevelInfo    = "🔵INFO🔵"
+	LevelSuccess = "🟢SUCCESS🟢"
+	LevelWarning = "🟡WARNING🟡"
+	LevelError   = "🔴ERROR🔴"
+)
+
 // Возвращает чаты в виде JSON объектов
 // chats, _ := l_tgn.GetChats(conf.Telegram.Token)
 // fmt.Println(chats)
@@ -78,6 +85,18 @@ func (b *TelegramNotifier) Notify(message string) error {
 			continue
 		}
 		if _, err := SendHttpGet(fmt.Sprintf(sendMessageURL, b.token, admin, url.QueryEscape(b.prefix+"\n"+message))); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (b *TelegramNotifier) NotifyWithLevel(message string, level string) error {
+	for _, admin := range *b.admins {
+		if hasLetters(admin) {
+			continue
+		}
+		if _, err := SendHttpGet(fmt.Sprintf(sendMessageURL, b.token, admin, url.QueryEscape(b.prefix+"\n"+level+"\n"+message))); err != nil {
 			return err
 		}
 	}
