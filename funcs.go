@@ -40,7 +40,7 @@ func SendHttpGet(url string) (string, error) {
 	}
 
 	if !strings.Contains(string(body), "message") {
-		return "", errors.New("NOT SUCCESS")
+		return "", errors.New("NOT SUCCESS::" + string(body))
 	}
 
 	return string(body), nil
