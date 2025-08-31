@@ -102,3 +102,11 @@ func (b *TelegramNotifier) NotifyWithLevel(message string, level string) error {
 	}
 	return nil
 }
+
+func (b *TelegramNotifier) AsyncNotify(message string) {
+	go b.Notify(message)
+}
+
+func (b *TelegramNotifier) AsyncNotifyWithLevel(message string, level string) {
+	go b.NotifyWithLevel(message, level)
+}
