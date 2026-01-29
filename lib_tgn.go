@@ -134,7 +134,7 @@ func (b *TelegramNotifier) NotifyWithLevelToTopic(message string, level string) 
 
 		data := map[string]interface{}{
 			"chat_id":           admin,
-			"text":              b.prefix + "\n" + level + "\n" + message,
+			"text":              level + "\n" + b.prefix + "\n" + message,
 			"parse_mode":        "HTML",
 			"message_thread_id": b.topic,
 		}
