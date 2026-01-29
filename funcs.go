@@ -1,6 +1,7 @@
 package lib_tgn
 
 import (
+	"bytes"
 	"errors"
 	"io"
 	"net/http"
@@ -29,6 +30,25 @@ func FindChatIDbyUsername(arr *[]Chat, username string) string {
 
 func SendHttpGet(url string) (string, error) {
 	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	if !strings.Contains(string(body), "message") {
+		return "", errors.New("NOT SUCCESS::" + string(body))
+	}
+
+	return string(body), nil
+}
+
+func SendHttpPost(url string, data []byte) (string, error) {
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(data))
 	if err != nil {
 		return "", err
 	}
